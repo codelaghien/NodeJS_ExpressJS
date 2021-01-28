@@ -1,0 +1,23 @@
+{
+  "name": "nodejs_expressjs_package",
+  "description": "Code cho project Node JS và Express JS",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codelaghien/NodeJS_ExpressJS.git"
+  },
+  "keywords": [],
+  "author": "Huy Nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codelaghien/NodeJS_ExpressJS"
+  },
+  "homepage": "https://github.com/codelaghien/NodeJS_ExpressJS",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
