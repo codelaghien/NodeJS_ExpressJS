@@ -13,6 +13,7 @@ app.use(express.static('client'));
 // routers
 app.use(apiPath + 'users', require('./routes/users.route'));
 // app.use(apiPath + 'products', require('./routes/products.route'));
+app.use(apiPath + 'upload', require('./routes/upload.route'));
 
 app.listen(port, function () {
 	const host = 'localhost';
