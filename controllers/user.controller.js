@@ -2,6 +2,7 @@ const User = require('../models/user.model');
 const people = require('../assets/people.json');
 const db = require('../database');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 class UserController {
 	get(req, res) {
@@ -56,50 +57,40 @@ class UserController {
 	async login(req, res) {
 		const username = req.body.username;
 		const password = req.body.password;
+		try {
+			db.connectDB()
+				.then((connection) => {
+					connection.query(
+						`SELECT * FROM users WHERE username='${username}' LIMIT 1`,
+						async function (err, data, fields) {
+							console.log('password = ' + password);
+							console.log('data', data[0].password);
+							db.closeDB(connection);
 
-		db.connectDB()
-			.then((connection) => {
-				connection.query(
-					`SELECT * FROM users WHERE username='${username}' LIMIT 1`,
-					async function (err, data, fields) {
-						console.log('password = ' + password);
-						console.log('data', data[0].password);
-						db.closeDB(connection);
-
-						// bcrypt.compare(
-						// 	password,
-						// 	data[0].password,
-						// 	(err, result) => {
-						// 		if (result) {
-						// 			return res
-						// 				.status(200)
-						// 				.json('Login thành công');
-						// 		} else {
-						// 			return res
-						// 				.status(200)
-						// 				.json('Login thất bại');
-						// 		}
-						// 	}
-						// );
-
-						const kiemtraPwd = await bcrypt.compare(
-							password,
-							data[0].password
-						);
-						if (kiemtraPwd) {
-							return res.status(200).json('Login thành công');
-						} else {
-							return res.status(200).json('Login thất bại');
+							const kiemtraPwd = await bcrypt.compare(
+								password,
+								data[0].password
+							);
+							if (kiemtraPwd) {
+								const token = generateJWT({
+									username: username,
+								});
+								return res.status(200).json(token);
+							} else {
+								return res.status(200).json('Login thất bại');
+							}
 						}
-					}
-				);
-			})
-			.catch((error) => {
-				console.log('Db not connected successfully', error);
-				return res
-					.status(200)
-					.json({ result: `Không thể kết nối Database` });
-			});
+					);
+				})
+				.catch((error) => {
+					console.log('Db not connected successfully', error);
+					return res
+						.status(200)
+						.json({ result: `Không thể kết nối Database` });
+				});
+		} catch (error) {
+			return res.status(500).json({ result: `Bị lỗi` });
+		}
 	}
 
 	promise(req, res) {
@@ -150,12 +141,22 @@ class UserController {
 
 	async async_await(req, res) {
 		let allData = 'Chưa có data';
-		const promise1 = await db.testPromise('#1', 2000).then((data) => {
+		const promise1 = await db.testPromise('#1', 1000).then((data) => {
 			allData = data;
 		});
 		console.log('allData', allData);
 		return res.status(200).json(allData);
 	}
+}
+
+function generateSecretKey(req, res) {
+	const key = require('crypto').randomBytes(256).toString('hex');
+	console.log('secret key', key);
+	return res.status(200).json(key);
+}
+
+function generateJWT(username) {
+	return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '120s' });
 }
 
 module.exports = new UserController();
