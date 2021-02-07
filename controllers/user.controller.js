@@ -90,6 +90,29 @@ class UserController {
 					.json({ result: `Không thể kết nối Database` });
 			});
 	}
+
+	promise(req, res) {
+		let data = 'chưa có';
+
+		db.testPromise(3000)
+			.then((monan) => {
+				console.log('món ăn 3000:', monan);
+			})
+			.catch((error) => {
+				console.log('error', error);
+			});
+
+		db.testPromise(1000)
+			.then((monan) => {
+				console.log('món ăn 1000: ', monan);
+			})
+			.catch((error) => {
+				console.log('error', error);
+			});
+
+		console.log('data', data);
+		return res.status(200).json(data);
+	}
 }
 
 module.exports = new UserController();

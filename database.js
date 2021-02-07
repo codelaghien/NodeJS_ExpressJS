@@ -19,3 +19,11 @@ module.exports.connectDB = () => {
 module.exports.closeDB = (con) => {
 	con.destroy();
 };
+
+module.exports.testPromise = (ms = 0) => {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve('Sau khi tạm dừng ' + ms + ' ms, món ăn đã xong');
+		}, ms);
+	});
+};
