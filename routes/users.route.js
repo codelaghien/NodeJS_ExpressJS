@@ -6,6 +6,7 @@ router.get('/', userController.get);
 router.post('/', userController.post);
 router.post('/login', userController.login);
 router.get('/promise', userController.promise);
+router.get('/promises', userController.promises);
 
 // router.put('/put', userController.put);
 

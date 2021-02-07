@@ -113,6 +113,29 @@ class UserController {
 		console.log('data', data);
 		return res.status(200).json(data);
 	}
+
+	promises(req, res) {
+		// let allData = 'chưa có';
+
+		const promise1 = db.testPromise('#1', 3000);
+		const promise2 = db.testPromise('#2', 2000);
+
+		Promise.all([promise1, promise2]).then(
+			(result) => {
+				// valArray[0] is result of promise0
+				// valArray[1] is result of promise1
+				console.log(result);
+				return res.status(200).json(result);
+			},
+			(error) => {
+				console.log(error);
+				return res.status(200).json(error);
+			}
+		);
+
+		// console.log('allData', allData);
+		// return res.status(200).json(allData);
+	}
 }
 
 module.exports = new UserController();

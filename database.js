@@ -20,10 +20,16 @@ module.exports.closeDB = (con) => {
 	con.destroy();
 };
 
-module.exports.testPromise = (ms = 0) => {
+module.exports.testPromise = (name = '', ms = 0) => {
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
-			resolve('Sau khi tạm dừng ' + ms + ' ms, món ăn đã xong');
+			resolve(
+				'Lời hứa ' +
+					name +
+					'. Sau khi tạm dừng ' +
+					ms +
+					' ms, đã làm xong'
+			);
 		}, ms);
 	});
 };
