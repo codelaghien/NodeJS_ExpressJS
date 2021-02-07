@@ -53,7 +53,7 @@ class UserController {
 		});
 	}
 
-	login(req, res) {
+	async login(req, res) {
 		const username = req.body.username;
 		const password = req.body.password;
 
@@ -61,25 +61,36 @@ class UserController {
 			.then((connection) => {
 				connection.query(
 					`SELECT * FROM users WHERE username='${username}' LIMIT 1`,
-					function (err, data, fields) {
+					async function (err, data, fields) {
+						console.log('password = ' + password);
 						console.log('data', data[0].password);
 						db.closeDB(connection);
 
-						bcrypt.compare(
+						// bcrypt.compare(
+						// 	password,
+						// 	data[0].password,
+						// 	(err, result) => {
+						// 		if (result) {
+						// 			return res
+						// 				.status(200)
+						// 				.json('Login thành công');
+						// 		} else {
+						// 			return res
+						// 				.status(200)
+						// 				.json('Login thất bại');
+						// 		}
+						// 	}
+						// );
+
+						const kiemtraPwd = await bcrypt.compare(
 							password,
-							data[0].password,
-							function (err, result) {
-								if (result) {
-									return res
-										.status(200)
-										.json('Login thành công');
-								} else {
-									return res
-										.status(200)
-										.json('Login thất bại');
-								}
-							}
+							data[0].password
 						);
+						if (kiemtraPwd) {
+							return res.status(200).json('Login thành công');
+						} else {
+							return res.status(200).json('Login thất bại');
+						}
 					}
 				);
 			})
@@ -135,6 +146,15 @@ class UserController {
 
 		// console.log('allData', allData);
 		// return res.status(200).json(allData);
+	}
+
+	async async_await(req, res) {
+		let allData = 'Chưa có data';
+		const promise1 = await db.testPromise('#1', 2000).then((data) => {
+			allData = data;
+		});
+		console.log('allData', allData);
+		return res.status(200).json(allData);
 	}
 }
 
