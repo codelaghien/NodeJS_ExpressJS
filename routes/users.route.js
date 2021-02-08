@@ -9,8 +9,7 @@ router.post('/login', userController.login);
 router.get('/promise', userController.promise);
 router.get('/promises', userController.promises);
 router.get('/async_await', authenticateToken, userController.async_await);
-
-//authenticateToken
+router.get('/fakeLogin', userController.fakeLogin);
 
 // router.put('/put', userController.put);
 

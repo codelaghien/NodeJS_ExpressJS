@@ -147,6 +147,12 @@ class UserController {
 		console.log('allData', allData);
 		return res.status(200).json(allData);
 	}
+
+	async fakeLogin(req, res) {
+		const payload = { username: 'Huy Nguyen', id: 1, role: 'Admin' };
+		const token = generateJWT(payload);
+		return res.status(200).json(token);
+	}
 }
 
 function generateSecretKey(req, res) {
@@ -155,8 +161,8 @@ function generateSecretKey(req, res) {
 	return res.status(200).json(key);
 }
 
-function generateJWT(username) {
-	return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '120s' });
+function generateJWT(payload) {
+	return jwt.sign(payload, process.env.TOKEN_SECRET, { expiresIn: '120s' });
 }
 
 module.exports = new UserController();
